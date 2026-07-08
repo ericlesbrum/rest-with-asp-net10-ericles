@@ -1,0 +1,24 @@
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2025-CU6-ubuntu-22.04
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "YourStrongPassword123!"
+      MSSQL_PID: Developer
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 2000M
+        reservations:
+          cpus: "0.25"
+          memory: 1000M
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+
+volumes:
+  sqlserver_data:
+    driver: local
