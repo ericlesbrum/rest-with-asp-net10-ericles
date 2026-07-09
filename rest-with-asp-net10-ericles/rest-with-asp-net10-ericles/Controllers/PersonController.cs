@@ -19,30 +19,37 @@ public class PersonController : ControllerBase
     [HttpGet]
     public IActionResult Get()
     {
-        return Ok();
+        return StatusCode(StatusCodes.Status200OK, personService.FindAll());
     }
 
-    [HttpGet("Id")]
-    public ActionResult Get(long Id)
+    [HttpGet("{Id}")]
+    public IActionResult Get(int Id)
     {
-        return Ok();
+        var person = personService.FindById(Id);
+        if (person == null)
+            return NotFound();
+
+        return StatusCode(StatusCodes.Status200OK, person);
     }
 
     [HttpPost]
-    public ActionResult Post(Person person)
+    public IActionResult Post([FromBody] Person person)
     {
-        return Ok();
+        var createdPerson = personService.Create(person);
+        return StatusCode(StatusCodes.Status201Created, createdPerson);
     }
 
     [HttpPut]
-    public ActionResult Put(Person person)
+    public IActionResult Put([FromBody] Person person)
     {
-        return Ok();
+        var updatedPerson = personService.Update(person);
+        return StatusCode(StatusCodes.Status200OK, updatedPerson);
     }
 
-    [HttpDelete]
-    public ActionResult Delete(long Id)
+    [HttpDelete("{Id}")]
+    public IActionResult Delete(int Id)
     {
-        return Ok();
+        personService.Delete(Id);
+        return StatusCode(StatusCodes.Status204NoContent);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using rest_with_asp_net10_ericles.Model;
 
 namespace rest_with_asp_net10_ericles.Model.Context;
 
