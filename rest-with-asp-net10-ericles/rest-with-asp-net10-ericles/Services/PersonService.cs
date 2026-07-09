@@ -1,57 +1,41 @@
 ﻿using rest_with_asp_net10_ericles.Model;
 using rest_with_asp_net10_ericles.Model.Context;
+using rest_with_asp_net10_ericles.Repositories.Interfaces;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
 namespace rest_with_asp_net10_ericles.Services
 {
     public class PersonService : IPersonService
     {
-        private readonly MSSQLContext _context;
+        private readonly IRepositoryPerson _repositoryPerson;
 
-        public PersonService(MSSQLContext context)
+        public PersonService(IRepositoryPerson repositoryPerson)
         {
-            _context = context;
+            _repositoryPerson = repositoryPerson;
         }
 
         public Person Create(Person person)
         {
-            var personExist = _context.Persons.FirstOrDefault(p => p.Id == person.Id);
-            if(personExist != null)
-                return personExist;
-            _context.Persons.Add(person);
-            _context.SaveChanges();
-            return person;
+            return _repositoryPerson.Create(person);
         }
-
-        public void Delete(long id)
+        public bool Delete(long id)
         {
-            var person = _context.Persons.FirstOrDefault(p => p.Id == id);
-            if(person != null)
-            {
-                _context.Persons.Remove(person);
-                _context.SaveChanges();
-            }
+            return _repositoryPerson.Delete(id);
         }
 
         public List<Person> FindAll()
         {
-            return _context.Persons.ToList();
+            return _repositoryPerson.FindAll();
         }
 
         public Person FindById(long id)
         {
-            return _context.Persons.FirstOrDefault(p => p.Id == id)!;
+            return _repositoryPerson.FindById(id);
         }
 
         public Person Update(Person person)
         {
-            var personExist = _context.Persons.FirstOrDefault(p => p.Id == person.Id);
-            if(personExist == null)
-                throw new InvalidOperationException($"Person cannot finded");
-
-            _context.Entry(personExist).CurrentValues.SetValues(person);
-            _context.SaveChanges();
-            return personExist;
+            return _repositoryPerson.Update(person);
         }
     }
 }
