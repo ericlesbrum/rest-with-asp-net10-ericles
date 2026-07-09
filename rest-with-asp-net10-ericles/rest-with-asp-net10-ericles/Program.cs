@@ -1,3 +1,4 @@
+using rest_with_asp_net10_ericles.Configurations;
 using rest_with_asp_net10_ericles.Services;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddControllers();
+builder.Services.AddDatabaseConfig(builder.Configuration);
 builder.Services.AddScoped<IPersonService, PersonService>();
 
 var app = builder.Build();
