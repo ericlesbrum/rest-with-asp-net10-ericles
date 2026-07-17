@@ -70,7 +70,12 @@ public class PersonController : ControllerBase
     public IActionResult Delete(int Id)
     {
         _logger.LogInformation("Deleting person by ID: {Id}", Id);
-        _personService.Delete(Id);
+        var deleted = _personService.Delete(Id);
+        if (!deleted)
+        {
+            _logger.LogWarning("Person with ID: {Id} not found for deletion", Id);
+            return NotFound();
+        }
         _logger.LogDebug("Person with ID: {Id} deleted successfully", Id);
         return StatusCode(StatusCodes.Status204NoContent);
     }

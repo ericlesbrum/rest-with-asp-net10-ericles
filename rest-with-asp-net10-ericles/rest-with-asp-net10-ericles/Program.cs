@@ -16,7 +16,9 @@ builder.Services.AddDatabaseConfig(builder.Configuration);
 builder.Services.AddEvolveConfig(builder.Configuration, builder.Environment);
 
 builder.Services.AddScoped<IRepositoryPerson, RepositoryPerson>();
+builder.Services.AddScoped<IRepositoryBook, RepositoryBook>();
 builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddScoped<IBookService, BookService>();
 
 var app = builder.Build();
 
