@@ -1,12 +1,12 @@
-﻿using rest_with_asp_net10_ericles.Model;
+﻿using rest_with_asp_net10_ericles.Data.DTO;
 
 namespace rest_with_asp_net10_ericles.Services.Interfaces;
 
 public interface IPersonService
 {
-    Person Create(Person person);
-    Person FindById(long id);
-    List<Person> FindAll();
-    Person Update(Person person);
+    PersonDTO Create(PersonDTO person);
+    PersonDTO FindById(long id);
+    List<PersonDTO> FindAll();
+    PersonDTO Update(PersonDTO person);
     bool Delete(long id);
 }

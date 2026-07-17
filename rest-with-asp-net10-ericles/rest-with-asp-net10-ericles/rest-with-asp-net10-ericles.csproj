@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Evolve" Version="3.2.0" />
+    <PackageReference Include="Mapster" Version="10.0.11" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.9" />
     <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
     <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.1" />

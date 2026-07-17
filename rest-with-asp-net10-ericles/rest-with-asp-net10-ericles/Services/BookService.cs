@@ -1,4 +1,6 @@
-﻿using rest_with_asp_net10_ericles.Model;
+﻿using Mapster;
+using rest_with_asp_net10_ericles.Data.DTO;
+using rest_with_asp_net10_ericles.Model;
 using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
@@ -13,9 +15,11 @@ public class BookService : IBookService
         _repositoryBook = repositoryBook;
     }
 
-    public Book Create(Book book)
+    public BookDTO Create(BookDTO book)
     {
-        return _repositoryBook.Create(book);
+        var entity = book.Adapt<Book>();
+        entity = _repositoryBook.Create(entity);
+        return entity.Adapt<BookDTO>();
     }
 
     public bool Delete(long id)
@@ -23,18 +27,20 @@ public class BookService : IBookService
         return _repositoryBook.Delete(id);
     }
 
-    public List<Book> FindAll()
+    public List<BookDTO> FindAll()
     {
-        return _repositoryBook.FindAll();
+        return _repositoryBook.FindAll().Adapt<List<BookDTO>>();
     }
 
-    public Book FindById(long id)
+    public BookDTO FindById(long id)
     {
-        return _repositoryBook.FindById(id);
+        return _repositoryBook.FindById(id).Adapt<BookDTO>();
     }
 
-    public Book Update(Book book)
+    public BookDTO Update(BookDTO book)
     {
-        return _repositoryBook.Update(book);
+        var entity = book.Adapt<Book>();
+        entity = _repositoryBook.Update(entity);
+        return entity.Adapt<BookDTO>();
     }
 }

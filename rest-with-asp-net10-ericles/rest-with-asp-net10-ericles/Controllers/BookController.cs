@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using rest_with_asp_net10_ericles.Model;
-using rest_with_asp_net10_ericles.Services;
+using rest_with_asp_net10_ericles.Data.DTO;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
 namespace rest_with_asp_net10_ericles.Controllers
@@ -40,7 +39,7 @@ namespace rest_with_asp_net10_ericles.Controllers
         }
 
         [HttpPost]
-        public IActionResult Post([FromBody] Book book)
+        public IActionResult Post([FromBody] BookDTO book)
         {
             _logger.LogInformation("Creating new book: {title} {author}", book.Title, book.Author);
             var createdBook = _bookService.Create(book);
@@ -53,7 +52,7 @@ namespace rest_with_asp_net10_ericles.Controllers
         }
 
         [HttpPut]
-        public IActionResult Put([FromBody] Book book)
+        public IActionResult Put([FromBody] BookDTO book)
         {
             _logger.LogInformation("Updating book with ID: {Id}", book.Id);
             var updatedBook = _bookService.Update(book);

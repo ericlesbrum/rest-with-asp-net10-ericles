@@ -1,12 +1,12 @@
-﻿using rest_with_asp_net10_ericles.Model;
+﻿using rest_with_asp_net10_ericles.Data.DTO;
 
 namespace rest_with_asp_net10_ericles.Services.Interfaces;
 
 public interface IBookService
 {
-    Book Create(Book book);
-    Book FindById(long id);
-    List<Book> FindAll();
-    Book Update(Book book);
+    BookDTO Create(BookDTO book);
+    BookDTO FindById(long id);
+    List<BookDTO> FindAll();
+    BookDTO Update(BookDTO book);
     bool Delete(long id);
 }
