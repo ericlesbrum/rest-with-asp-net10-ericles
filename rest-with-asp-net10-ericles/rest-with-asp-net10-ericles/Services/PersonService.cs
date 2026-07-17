@@ -1,15 +1,16 @@
 ﻿using rest_with_asp_net10_ericles.Model;
 using rest_with_asp_net10_ericles.Model.Context;
 using rest_with_asp_net10_ericles.Repositories.Interfaces;
+using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
 namespace rest_with_asp_net10_ericles.Services
 {
     public class PersonService : IPersonService
     {
-        private readonly IRepositoryPerson _repositoryPerson;
+        private readonly IRepository<Person> _repositoryPerson;
 
-        public PersonService(IRepositoryPerson repositoryPerson)
+        public PersonService(IRepository<Person> repositoryPerson)
         {
             _repositoryPerson = repositoryPerson;
         }

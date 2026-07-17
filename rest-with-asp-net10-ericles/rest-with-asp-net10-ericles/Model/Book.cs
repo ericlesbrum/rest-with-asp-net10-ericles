@@ -1,15 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using rest_with_asp_net10_ericles.Model.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace rest_with_asp_net10_ericles.Model;
 
-public class Book
+public class Book : BaseEntity
 {
-    [Key]
-    [Column("id")]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public long Id { get; set; }
-
     [Required]
     [Column("title", TypeName = "varchar(MAX)")]
     public string Title { get; set; }
@@ -19,7 +15,7 @@ public class Book
     public string Author { get; set; }
 
     [Required]
-    [Column("price", TypeName = "decimal(18,2")]
+    [Column("price", TypeName = "decimal(18,2)")]
     public decimal Price { get; set; }
 
     [Required]

@@ -1,14 +1,14 @@
 ﻿using rest_with_asp_net10_ericles.Model;
-using rest_with_asp_net10_ericles.Repositories.Interfaces;
+using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
 namespace rest_with_asp_net10_ericles.Services;
 
 public class BookService : IBookService
 {
-    private readonly IRepositoryBook _repositoryBook;
+    private readonly IRepository<Book> _repositoryBook;
 
-    public BookService(IRepositoryBook repositoryBook)
+    public BookService(IRepository<Book> repositoryBook)
     {
         _repositoryBook = repositoryBook;
     }
