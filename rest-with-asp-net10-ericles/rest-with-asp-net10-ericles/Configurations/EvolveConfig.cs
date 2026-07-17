@@ -26,17 +26,18 @@ public static class EvolveConfig
                     msg => Log.Information(msg)
                     )
                 {
-                    Locations = new List<string> { "db/migrations" , "db/dataset"},
+                    Locations = new List<string> { "db/migrations", "db/dataset" },
                     IsEraseDisabled = true,
                     CommandTimeout = 60
                 };
+                evolve.Migrate();
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 Log.Error(ex, "An error occurred while migrating the database.");
             }
 
-            return services;
         }
+        return services;
     }
 }
