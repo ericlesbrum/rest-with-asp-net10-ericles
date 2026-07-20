@@ -9,7 +9,6 @@ public static class LoggingConfig
     Log.Logger = new LoggerConfiguration()
       .ReadFrom.Configuration(builder.Configuration)
       .Enrich.FromLogContext()
-      .WriteTo.Console()
       .WriteTo.Debug()
       .CreateLogger();
 
