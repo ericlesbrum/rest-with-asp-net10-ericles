@@ -1,5 +1,5 @@
 ﻿using Mapster;
-using rest_with_asp_net10_ericles.Data.DTO;
+using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Model;
 using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services.Interfaces;

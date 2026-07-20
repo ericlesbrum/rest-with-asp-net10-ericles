@@ -1,4 +1,4 @@
-﻿namespace rest_with_asp_net10_ericles.Data.DTO;
+﻿namespace rest_with_asp_net10_ericles.Data.DTO.V1;
 
 public class BookDTO
 {

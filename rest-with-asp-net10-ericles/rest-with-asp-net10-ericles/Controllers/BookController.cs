@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using rest_with_asp_net10_ericles.Data.DTO;
+using rest_with_asp_net10_ericles.Data.DTO.V1;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
 namespace rest_with_asp_net10_ericles.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/v2")]
     [ApiController]
     public class BookController : ControllerBase
     {

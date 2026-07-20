@@ -23,4 +23,8 @@ public class Person : BaseEntity
     [Column("gender", TypeName = "varchar(6)")]
     [MaxLength(6)]
     public required string Gender { get; set; }
+    [Required]
+    [Column("birthday", TypeName = "date")]
+    [DataType(DataType.Date)]
+    public DateTime? Birthday { get; set; }
 }

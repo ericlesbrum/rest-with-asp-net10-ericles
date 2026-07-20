@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using rest_with_asp_net10_ericles.Model;
+using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
 namespace rest_with_asp_net10_ericles.Controllers;
 
-[Route("api/[controller]")]
+[Route("api/[controller]/v2")]
 [ApiController]
 public class PersonController : ControllerBase
 {
@@ -40,7 +40,7 @@ public class PersonController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Post([FromBody] Person person)
+    public IActionResult Post([FromBody] PersonDTO person)
     {
         _logger.LogInformation("Creating new person: {firstName} {lastName}", person.FirstName, person.LastName);
         var createdPerson = _personService.Create(person);
@@ -53,7 +53,7 @@ public class PersonController : ControllerBase
     }
 
     [HttpPut]
-    public IActionResult Put([FromBody] Person person)
+    public IActionResult Put([FromBody] PersonDTO person)
     {
         _logger.LogInformation("Updating person with ID: {Id}", person.Id);
         var updatedPerson = _personService.Update(person);
