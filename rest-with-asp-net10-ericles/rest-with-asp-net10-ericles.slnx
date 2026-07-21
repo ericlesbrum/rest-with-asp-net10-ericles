@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="rest-with-asp-net10-ericles/rest-with-asp-net10-ericles.csproj" />
+  <Project Path="rest_with_asp_net10_ericles.Tests/rest_with_asp_net10_ericles.Tests.csproj" Id="bd3940fe-8e1e-4f68-89d0-e7ee9e0d40f7" />
 </Solution>
