@@ -19,6 +19,9 @@ namespace rest_with_asp_net10_ericles.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(200, Type = typeof(BookDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Get()
         {
             _logger.LogInformation("Fetching all books");
@@ -26,6 +29,9 @@ namespace rest_with_asp_net10_ericles.Controllers
         }
 
         [HttpGet("{Id}")]
+        [ProducesResponseType(200, Type = typeof(BookDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Get(int Id)
         {
             _logger.LogInformation("Fetching book by ID: {Id}", Id);
@@ -39,6 +45,9 @@ namespace rest_with_asp_net10_ericles.Controllers
         }
 
         [HttpPost]
+        [ProducesResponseType(200, Type = typeof(BookDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Post([FromBody] BookDTO book)
         {
             _logger.LogInformation("Creating new book: {title} {author}", book.Title, book.Author);
@@ -52,6 +61,9 @@ namespace rest_with_asp_net10_ericles.Controllers
         }
 
         [HttpPut]
+        [ProducesResponseType(200, Type = typeof(BookDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Put([FromBody] BookDTO book)
         {
             _logger.LogInformation("Updating book with ID: {Id}", book.Id);
@@ -66,6 +78,9 @@ namespace rest_with_asp_net10_ericles.Controllers
         }
 
         [HttpDelete]
+        [ProducesResponseType(204, Type = typeof(BookDTO))]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(401)]
         public IActionResult Delete(int Id)
         {
             _logger.LogInformation("Deleting book with ID: {Id}", Id);
