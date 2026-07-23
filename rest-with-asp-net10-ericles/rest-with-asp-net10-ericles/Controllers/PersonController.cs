@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 

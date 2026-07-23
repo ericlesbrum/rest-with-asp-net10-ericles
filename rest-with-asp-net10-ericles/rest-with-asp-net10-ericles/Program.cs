@@ -13,7 +13,7 @@ builder.AddSerilogLogging();
 builder.Services.AddControllers().AddContentNegotiation();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddOpenApi();
+builder.Services.AddOpenAPIConfig();
 builder.Services.AddSwaggerConfig();
 builder.Services.AddRouteConfig();
 
@@ -35,5 +35,6 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.UseSwaggerSpecification();
+app.UseScalarSpecification();
 
 app.Run();

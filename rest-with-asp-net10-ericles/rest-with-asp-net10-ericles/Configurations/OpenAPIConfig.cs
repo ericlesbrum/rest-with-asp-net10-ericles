@@ -8,7 +8,7 @@ public static class OpenAPIConfig
     private static readonly string _appVersion = "1.0.0";
     private static readonly string _appDescription = "RESTful API with ASP.NET 10";
 
-    public static IServiceCollection AddOpenApi(this IServiceCollection services)
+    public static IServiceCollection AddOpenAPIConfig(this IServiceCollection services)
     {
         services.AddSingleton(new OpenApiInfo
         {
