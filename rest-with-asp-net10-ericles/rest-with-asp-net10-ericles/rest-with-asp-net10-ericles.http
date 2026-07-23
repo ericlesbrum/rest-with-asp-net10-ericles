@@ -1,6 +1,6 @@
 @rest_with_asp_net10_ericles_HostAddress = http://localhost:5098
 
-GET {{rest_with_asp_net10_ericles_HostAddress}}/weatherforecast/
-Accept: application/json
+GET {{rest_with_asp_net10_ericles_HostAddress}}/swagger-ui/index.html
+Accept: text/html
 
 ###

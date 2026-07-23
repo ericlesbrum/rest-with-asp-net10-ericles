@@ -1,8 +1,6 @@
 using rest_with_asp_net10_ericles;
 using rest_with_asp_net10_ericles.Configurations;
-using rest_with_asp_net10_ericles.Repositories;
 using rest_with_asp_net10_ericles.Repositories.Generics;
-using rest_with_asp_net10_ericles.Repositories.Interfaces;
 using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services;
 using rest_with_asp_net10_ericles.Services.Interfaces;
@@ -13,6 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddSerilogLogging();
 
 builder.Services.AddControllers().AddContentNegotiation();
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddOpenApi();
+builder.Services.AddSwaggerConfig();
+builder.Services.AddRouteConfig();
 
 builder.Services.AddDatabaseConfig(builder.Configuration);
 builder.Services.AddEvolveConfig(builder.Configuration, builder.Environment);
@@ -30,5 +33,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseSwaggerSpecification();
 
 app.Run();
