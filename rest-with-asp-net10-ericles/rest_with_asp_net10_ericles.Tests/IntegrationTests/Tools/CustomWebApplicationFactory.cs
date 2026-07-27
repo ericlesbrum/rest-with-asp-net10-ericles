@@ -4,7 +4,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace rest_with_asp_net10_ericles.Tests.IntegrationTests.Tools;
 
-public class CustomWebApplicationFactory <TProgram>: WebApplicationFactory<TProgram> where TProgram : class
+public class CustomWebApplicationFactory<TProgram> : WebApplicationFactory<TProgram> where TProgram : class
 {
     private readonly string _connectionString;
     public CustomWebApplicationFactory(string connectionString)
