@@ -5,7 +5,7 @@ using rest_with_asp_net10_ericles.Model;
 using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services;
 
-namespace rest_with_asp_net10_ericles.Tests;
+namespace rest_with_asp_net10_ericles.Tests.UnitTests;
 
 public class BookServiceTests
 {

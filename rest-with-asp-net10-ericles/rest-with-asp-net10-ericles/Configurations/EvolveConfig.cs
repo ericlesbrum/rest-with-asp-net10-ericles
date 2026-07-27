@@ -18,26 +18,30 @@ public static class EvolveConfig
             {
                 throw new InvalidOperationException("Connection string 'MSSQLSERVERSQLConnection:MSSQLSERVERSQLConnectionString' not found.");
             }
-            try
-            {
-                using var evolveConnection = new SqlConnection(connectionString);
-                var evolve = new Evolve(
-                    evolveConnection,
-                    msg => Log.Information(msg)
-                    )
-                {
-                    Locations = new List<string> { "db/migrations", "db/dataset" },
-                    IsEraseDisabled = true,
-                    CommandTimeout = 60
-                };
-                evolve.Migrate();
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex, "An error occurred while migrating the database.");
-            }
 
+            ExecuteMigrations(connectionString);
         }
         return services;
+    }
+    public static void ExecuteMigrations(string connectionString)
+    {
+        try
+        {
+            using var evolveConnection = new SqlConnection(connectionString);
+            var evolve = new Evolve(
+                evolveConnection,
+                msg => Log.Information(msg)
+                )
+            {
+                Locations = new List<string> { "db/migrations", "db/dataset" },
+                IsEraseDisabled = true,
+                CommandTimeout = 60
+            };
+            evolve.Migrate();
+        }
+        catch (Exception ex)
+        {
+            Log.Error(ex, "An error occurred while migrating the database.");
+        }
     }
 }
