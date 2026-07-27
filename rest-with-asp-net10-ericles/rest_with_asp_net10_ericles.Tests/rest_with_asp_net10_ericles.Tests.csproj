@@ -30,6 +30,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content 
+      Include="..\rest-with-asp-net10-ericles\db\migrations\**\*.sql" 
+      Link ="db\migrations\%(RecursiveDir)%(Filename)%(Extension)" 
+      CopyToOutputDirectory="Always"/>
+    <Content 
+      Include="..\rest-with-asp-net10-ericles\db\dataset\**\*.sql" 
+      Link ="db\dataset\%(RecursiveDir)%(Filename)%(Extension)" 
+      CopyToOutputDirectory="Always"/>
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 
