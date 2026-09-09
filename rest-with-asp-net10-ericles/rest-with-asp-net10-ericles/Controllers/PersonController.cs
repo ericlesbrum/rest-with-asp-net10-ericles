@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Mvc;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
@@ -6,6 +7,7 @@ namespace rest_with_asp_net10_ericles.Controllers;
 
 [Route("api/[controller]/v2")]
 [ApiController]
+[EnableCors("LocalPolicy")]
 public class PersonController : ControllerBase
 {
     private readonly IPersonService _personService;
