@@ -99,7 +99,7 @@ public class PersonController : ControllerBase
     [ProducesResponseType(200, Type = typeof(PersonDTO))]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    public IActionResult Patch(int Id, [FromBody] PersonDTO person)
+    public IActionResult Patch(long Id)
     {
         _logger.LogInformation("Disabling person with ID: {Id}", Id);
         var patchedPerson = _personService.Disable(Id);
