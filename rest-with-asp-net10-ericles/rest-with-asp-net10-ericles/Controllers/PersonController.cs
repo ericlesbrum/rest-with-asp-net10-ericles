@@ -94,4 +94,20 @@ public class PersonController : ControllerBase
         _logger.LogDebug("Person with ID: {Id} deleted successfully", Id);
         return StatusCode(StatusCodes.Status204NoContent);
     }
+
+    [HttpPatch("{Id}")]
+    [ProducesResponseType(200, Type = typeof(PersonDTO))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    public IActionResult Patch(int Id, [FromBody] PersonDTO person)
+    {
+        _logger.LogInformation("Disabling person with ID: {Id}", Id);
+        var patchedPerson = _personService.Disable(Id);
+        if (patchedPerson == null)
+        {
+            _logger.LogWarning("Person with ID: {Id} not found for disabling", Id);
+            return NotFound();
+        }
+        return StatusCode(StatusCodes.Status200OK, patchedPerson);
+    }
 }

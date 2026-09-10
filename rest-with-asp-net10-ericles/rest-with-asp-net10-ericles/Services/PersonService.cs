@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Model;
+using rest_with_asp_net10_ericles.Repositories.Interfaces;
 using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
@@ -8,11 +9,11 @@ namespace rest_with_asp_net10_ericles.Services
 {
     public class PersonService : IPersonService
     {
-        private readonly IRepository<Person> _repositoryPerson;
+        private readonly IPersonRepository _repositoryPerson;
 
-        public PersonService(IRepository<Person> repositoryPerson)
+        public PersonService(IPersonRepository personRepository)
         {
-            _repositoryPerson = repositoryPerson;
+            _repositoryPerson = personRepository;
         }
 
         public PersonDTO Create(PersonDTO person)
@@ -41,6 +42,11 @@ namespace rest_with_asp_net10_ericles.Services
             var entity = person.Adapt<Person>();
             entity = _repositoryPerson.Update(entity);
             return entity.Adapt<PersonDTO>();
+        }
+
+        public PersonDTO? Disable(long id) {
+            var person = _repositoryPerson.Disable(id);
+            return person?.Adapt<PersonDTO>();
         }
     }
 }
