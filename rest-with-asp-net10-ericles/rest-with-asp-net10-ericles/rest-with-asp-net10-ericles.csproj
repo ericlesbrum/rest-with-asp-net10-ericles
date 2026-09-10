@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="db\migrations\V7__Alter_Table_Person.sql" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Evolve" Version="3.2.0" />
     <PackageReference Include="Mapster" Version="10.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Formatters.Xml.Extensions" Version="10.0.0" />

@@ -27,4 +27,7 @@ public class Person : BaseEntity
     [Column("birthday", TypeName = "date")]
     [DataType(DataType.Date)]
     public DateTime? Birthday { get; set; }
+    
+    [Column("enabled", TypeName = "bit")]
+    public bool Enabled { get; set; }
 }

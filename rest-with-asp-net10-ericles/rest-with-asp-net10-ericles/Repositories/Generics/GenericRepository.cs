@@ -7,7 +7,7 @@ namespace rest_with_asp_net10_ericles.Repositories.Generics;
 
 public class GenericRepository<T> : IRepository<T> where T : BaseEntity
 {
-    private readonly MSSQLContext _context;
+    protected readonly MSSQLContext _context;
     private readonly DbSet<T> dataset;
 
     public GenericRepository(MSSQLContext context)

@@ -8,4 +8,5 @@ public class PersonDTO
     public string Address { get; set; }
     public string Gender { get; set; }
     public DateTime? Birthday { get; set; }
+    public bool Enabled { get; set; }
 }
