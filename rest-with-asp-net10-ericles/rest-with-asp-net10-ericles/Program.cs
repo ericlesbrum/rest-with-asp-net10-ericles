@@ -1,6 +1,8 @@
 using rest_with_asp_net10_ericles;
 using rest_with_asp_net10_ericles.Configurations;
+using rest_with_asp_net10_ericles.Repositories;
 using rest_with_asp_net10_ericles.Repositories.Generics;
+using rest_with_asp_net10_ericles.Repositories.Interfaces;
 using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services;
 using rest_with_asp_net10_ericles.Services.Interfaces;
@@ -21,6 +23,7 @@ builder.Services.AddCorsConfiguration(builder.Configuration);
 builder.Services.AddDatabaseConfig(builder.Configuration);
 builder.Services.AddEvolveConfig(builder.Configuration, builder.Environment);
 
+builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped(typeof(IRepository<>),typeof(GenericRepository<>));
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IBookService, BookService>();
