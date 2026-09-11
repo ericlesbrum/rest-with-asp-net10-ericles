@@ -9,6 +9,7 @@ public static class HATEOASConfig
     {
         var filterOptions = new HypermediaFilterOptions();
         filterOptions.ContentResponseEnricherList.Add(new PersonEnricher());
+        filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
 
         services.AddSingleton(filterOptions);
 
