@@ -1,6 +1,9 @@
-﻿namespace rest_with_asp_net10_ericles.Data.DTO.V2;
+﻿using rest_with_asp_net10_ericles.Hypermedia;
+using rest_with_asp_net10_ericles.Hypermedia.Abstract;
 
-public class PersonDTO
+namespace rest_with_asp_net10_ericles.Data.DTO.V2;
+
+public class PersonDTO : ISupportsHyperMedia
 {
     public long Id { get; set; }
     public string FirstName { get; set; }
@@ -9,4 +12,5 @@ public class PersonDTO
     public string Gender { get; set; }
     public DateTime? Birthday { get; set; }
     public bool Enabled { get; set; }
+    public List<HypermediaLink> Links { get; set; } = [];
 }
