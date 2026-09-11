@@ -15,11 +15,17 @@ public class HypermediaFilter(HypermediaFilterOptions hypermediaFilterOptions) :
 
     private void TryEnrichResult(ResultExecutingContext context)
     {
-        if (context.Result is OkObjectResult objectResult)
+        if (context.Result is ObjectResult objectResult && IsSuccessStatusCode(objectResult))
         {
             var enricher = _hypermediaFilterOptions.ContentResponseEnricherList
                 .FirstOrDefault(option => option.CanEnrich(context));
             enricher?.Enrich(context).Wait();
         }
+    }
+
+    private static bool IsSuccessStatusCode(ObjectResult result)
+    {
+        var statusCode = result.StatusCode ?? StatusCodes.Status200OK;
+        return statusCode >= StatusCodes.Status200OK && statusCode < StatusCodes.Status300MultipleChoices;
     }
 }

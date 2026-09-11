@@ -9,19 +9,20 @@ public abstract class ContentResponseEnricher<T> : IResponseEnricher where T : I
 {
     public virtual bool CanEnrich(Type contentType)
     {
-        return contentType == typeof(T) || contentType == typeof(T[]);
+        return typeof(T).IsAssignableFrom(contentType)
+            || typeof(IEnumerable<T>).IsAssignableFrom(contentType);
     }
 
     public async Task Enrich(ResultExecutingContext response)
     {
         var urlHelper = new UrlHelperFactory().GetUrlHelper(response);
-        if (response.Result is OkObjectResult okObjectResult)
+        if (response.Result is ObjectResult objectResult)
         {
-            if (okObjectResult.Value is T content)
+            if (objectResult.Value is T content)
             {
                 await EnrichModel(content, urlHelper);
             }
-            else if (okObjectResult.Value is IEnumerable<T> contentList)
+            else if (objectResult.Value is IEnumerable<T> contentList)
             {
                 foreach (var item in contentList)
                 {
@@ -36,9 +37,9 @@ public abstract class ContentResponseEnricher<T> : IResponseEnricher where T : I
 
     bool IResponseEnricher.CanEnrich(ResultExecutingContext response)
     {
-        if (response.Result is OkObjectResult okObjectResult)
+        if (response.Result is ObjectResult objectResult)
         {
-            var contentType = okObjectResult.Value?.GetType();
+            var contentType = objectResult.Value?.GetType();
             return contentType != null ? CanEnrich(contentType) : false;
         }
         return false;
