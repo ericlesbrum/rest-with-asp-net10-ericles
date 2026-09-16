@@ -14,7 +14,7 @@ public class SwaggerIntegrationTests : IClassFixture<SqlServerFixture>
 
     public SwaggerIntegrationTests(SqlServerFixture sqlServerFixture)
     {
-        var factory = new CustomWebApplicationFactory<Program>(sqlServerFixture.connectionString);
+        var factory = new CustomWebApplicationFactory<Program>(sqlServerFixture.ConnectionString);
         _httpClient = factory.CreateClient(new WebApplicationFactoryClientOptions
         {
             BaseAddress = new Uri("http://localhost")

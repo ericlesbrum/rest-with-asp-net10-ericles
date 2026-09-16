@@ -9,7 +9,7 @@ public class ScalarIntegrationTests : IClassFixture<SqlServerFixture>
     private readonly HttpClient _httpClient;
     public ScalarIntegrationTests(SqlServerFixture sqlServerFixture)
     {
-        var factory = new CustomWebApplicationFactory<Program>(sqlServerFixture.connectionString);
+        var factory = new CustomWebApplicationFactory<Program>(sqlServerFixture.ConnectionString);
         _httpClient = factory.CreateClient(
             new WebApplicationFactoryClientOptions
             {
