@@ -2,6 +2,7 @@ using FluentAssertions;
 using Moq;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Model;
+using rest_with_asp_net10_ericles.Repositories.Interfaces; // added for IPersonRepository
 using rest_with_asp_net10_ericles.Repositories.Interfaces.Generic;
 using rest_with_asp_net10_ericles.Services;
 
@@ -13,7 +14,7 @@ public class PersonServiceTests
     public void Create_ShouldMapPersonDtoToEntityAndReturnDto()
     {
         // Arrange
-        var repositoryMock = new Mock<IRepository<Person>>();
+        var repositoryMock = new Mock<IPersonRepository>();
         var person = new PersonDTO
         {
             FirstName = "John",
@@ -58,7 +59,7 @@ public class PersonServiceTests
     public void FindAll_ShouldReturnAllPersonsAsDtos()
     {
         // Arrange
-        var repositoryMock = new Mock<IRepository<Person>>();
+        var repositoryMock = new Mock<IPersonRepository>();
         var people = new List<Person>
         {
             new()
@@ -101,7 +102,7 @@ public class PersonServiceTests
     public void FindById_ShouldReturnPersonDto_WhenPersonExists()
     {
         // Arrange
-        var repositoryMock = new Mock<IRepository<Person>>();
+        var repositoryMock = new Mock<IPersonRepository>();
         var person = new Person
         {
             Id = 10,
@@ -131,7 +132,7 @@ public class PersonServiceTests
     public void Update_ShouldMapDtoAndReturnUpdatedPerson()
     {
         // Arrange
-        var repositoryMock = new Mock<IRepository<Person>>();
+        var repositoryMock = new Mock<IPersonRepository>();
         var person = new PersonDTO
         {
             Id = 3,
@@ -169,7 +170,7 @@ public class PersonServiceTests
     public void Delete_ShouldReturnTrue_WhenRepositoryDeletesPerson()
     {
         // Arrange
-        var repositoryMock = new Mock<IRepository<Person>>();
+        var repositoryMock = new Mock<IPersonRepository>();
         repositoryMock.Setup(r => r.Delete(4)).Returns(true);
         var service = new PersonService(repositoryMock.Object);
 

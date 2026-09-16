@@ -4,7 +4,7 @@ namespace rest_with_asp_net10_ericles.Configurations;
 
 public static class ScalarConfig
 {
-    private static readonly string _appName = "ASP.NET REST API's With .NET10, Docker and Kubernetes";
+    private static readonly string _appName = "ASP.NET 2026 REST API's from 0 to Azure and GCP with .NET 10, Docker e Kubernetes";
     
     public static WebApplication UseScalarSpecification(this WebApplication app)
     {
