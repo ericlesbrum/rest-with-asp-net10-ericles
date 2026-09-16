@@ -9,11 +9,12 @@ namespace RestWithASPNET10Erudio.Tests.IntegrationTests.Tools
             (IReadOnlyCollection<TTestCase> testCases) where TTestCase
             : ITestCase
         {
-            var sortedMethods = testCases.OrderBy(
-                tc => ((tc as IXunitTestCase)?.TestMethod.Method
-                    .GetMatchingCustomAttributes(typeof(TestPriorityAttribute))
-                    .FirstOrDefault() as TestPriorityAttribute)
-                    ?.Priority ?? 0);
+            var sortedMethods = testCases.OrderBy(tc =>
+                tc is IXunitTestCase xunitTestCase
+                    ? (xunitTestCase.TestMethod.Method
+                        .GetMatchingCustomAttributes(typeof(TestPriorityAttribute))
+                        .FirstOrDefault() as TestPriorityAttribute)?.Priority ?? 0
+                    : 0);
             return sortedMethods.ToArray();
         }
     }

@@ -8,7 +8,7 @@ namespace rest_with_asp_net10_ericles.Tests.IntegrationTests.Tools;
 public class SqlServerFixture : IAsyncLifetime
 {
     public MsSqlContainer SqlContainer { get;}
-    public string connectionString => SqlContainer.GetConnectionString();
+    public string ConnectionString => SqlContainer.GetConnectionString();
 
     public SqlServerFixture()
     {
@@ -23,7 +23,7 @@ public class SqlServerFixture : IAsyncLifetime
     public async ValueTask InitializeAsync()
     {
         await SqlContainer.StartAsync();
-        EvolveConfig.ExecuteMigrations(connectionString);
+        EvolveConfig.ExecuteMigrations(ConnectionString);
     }
     
     public async ValueTask DisposeAsync()
