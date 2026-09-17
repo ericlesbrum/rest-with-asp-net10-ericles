@@ -3,18 +3,20 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Tests.IntegrationTests.Tools;
 using RestWithASPNET10Erudio.Tests.IntegrationTests.Tools;
+using System;
+using System.Collections.Generic;
 using System.Net;
-using System.Net.Http.Json;
+using System.Text;
 
-namespace rest_with_asp_net10_ericles.Tests.IntegrationTests.JSON;
+namespace rest_with_asp_net10_ericles.Tests.IntegrationTests.Person.XML;
 
 [TestCaseOrderer<PriorityOrderer>]
-public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
+public class PersonControllerXmlTests : IClassFixture<SqlServerFixture>
 {
     private readonly HttpClient _httpClient;
     private static PersonDTO _person = null!;
 
-    public PersonControllerJsonTests(SqlServerFixture sqlFixture)
+    public PersonControllerXmlTests(SqlServerFixture sqlFixture)
     {
         var factory = new CustomWebApplicationFactory<Program>(
             sqlFixture.ConnectionString);
@@ -42,16 +44,16 @@ public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
 
         // Act
         var response = await _httpClient
-            .PostAsJsonAsync("api/person/v1", request,TestContext.Current.CancellationToken);
+            .PostAsync("api/person/v2",
+            XmlHelper.SerializeToXml(request), TestContext.Current.CancellationToken);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var created = await response.Content
-            .ReadFromJsonAsync<PersonDTO>(TestContext.Current.CancellationToken);
+        var created = await XmlHelper.ReadFromXmlAsync<PersonDTO>(response);
 
         created.Should().NotBeNull();
-        created!.Id.Should().BeGreaterThan(0);
+        created.Id.Should().BeGreaterThan(0);
         created.FirstName.Should().Be("Linus");
         created.LastName.Should().Be("Torvalds");
         created.Address.Should().Be("Helsinki - Finland");
@@ -69,13 +71,13 @@ public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
 
         // Act
         var response = await _httpClient
-            .PutAsJsonAsync("api/person/v2", _person, TestContext.Current.CancellationToken);
+            .PutAsync("api/person/v2",
+            XmlHelper.SerializeToXml(_person), TestContext.Current.CancellationToken);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var updated = await response.Content
-                .ReadFromJsonAsync<PersonDTO>(TestContext.Current.CancellationToken);
+        var updated = await XmlHelper.ReadFromXmlAsync<PersonDTO>(response);
 
         updated.Should().NotBeNull();
         updated.Id.Should().BeGreaterThan(0);
@@ -93,13 +95,12 @@ public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
     {
         // Arrange & Act
         var response = await _httpClient
-            .PatchAsync($"api/person/v1/{_person.Id}", null, TestContext.Current.CancellationToken);
+            .PatchAsync($"api/person/v2/{_person.Id}", null, TestContext.Current.CancellationToken);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var disabled = await response.Content
-                .ReadFromJsonAsync<PersonDTO>(TestContext.Current.CancellationToken);
+        var disabled = await XmlHelper.ReadFromXmlAsync<PersonDTO>(response);
 
         disabled.Should().NotBeNull();
         disabled.Id.Should().BeGreaterThan(0);
@@ -122,8 +123,7 @@ public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var found = await response.Content
-            .ReadFromJsonAsync<PersonDTO>(TestContext.Current.CancellationToken);
+        var found = await XmlHelper.ReadFromXmlAsync<PersonDTO>(response);
 
         found.Should().NotBeNull();
         found.Id.Should().Be(_person.Id);
@@ -155,8 +155,8 @@ public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var list = await response.Content
-                .ReadFromJsonAsync<List<PersonDTO>>(TestContext.Current.CancellationToken);
+        var list = await XmlHelper
+            .ReadFromXmlAsync<List<PersonDTO>>(response);
 
         list.Should().NotBeNull();
         list.Count.Should().BeGreaterThan(0);
@@ -167,10 +167,10 @@ public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
         first.Enabled.Should().BeTrue();
         first.Gender.Should().Be("Male");
 
-        var fifth = list.First(p => p.FirstName == "Ada");
-        fifth.LastName.Should().Be("Lovelace");
-        fifth.Address.Should().Be("London - England");
-        fifth.Enabled.Should().BeTrue();
-        fifth.Gender.Should().Be("Female");
+        var third = list.First(p => p.FirstName == "Nelson");
+        third.LastName.Should().Be("Mandela");
+        third.Address.Should().Be("Mvezo - South Africa");
+        third.Enabled.Should().BeTrue();
+        third.Gender.Should().Be("Male");
     }
 }
