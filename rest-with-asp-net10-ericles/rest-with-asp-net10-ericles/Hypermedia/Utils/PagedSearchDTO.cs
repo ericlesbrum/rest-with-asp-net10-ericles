@@ -8,7 +8,7 @@ public class PagedSearchDTO<T> where T : ISupportsHyperMedia
     public int PageSize { get; set; }
     public int TotalResults { get; set; }
     public string SortedFields { get; set; }
-    public string SortDirecctions { get; set; } = "asc";
+    public string SortDirections { get; set; } = "asc";
     public Dictionary<string, object> Filters { get; set; } = [];
 
     public List<T> List { get; set; } = [];
@@ -22,7 +22,7 @@ public class PagedSearchDTO<T> where T : ISupportsHyperMedia
         CurrentPage = currentPage;
         PageSize = pageSize;
         SortedFields = sortedFields;
-        SortDirecctions = sortDirections;
+        SortDirections = sortDirections;
         Filters = filters ?? [];
     }
 
@@ -31,7 +31,7 @@ public class PagedSearchDTO<T> where T : ISupportsHyperMedia
         CurrentPage = currentPage;
         PageSize = 10;
         SortedFields = sortedFields;
-        SortDirecctions = sortDirections;
+        SortDirections = sortDirections;
         Filters = [];
     }
 
