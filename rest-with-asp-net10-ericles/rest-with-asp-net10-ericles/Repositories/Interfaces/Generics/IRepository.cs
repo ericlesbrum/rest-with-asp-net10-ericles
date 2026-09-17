@@ -10,4 +10,6 @@ public interface IRepository<T> where T : BaseEntity
     T Update(T item);
     bool Delete(long id);
     bool Exists(long id);
+    public List<T> FindWithPagedSearch(string query);
+    public int GetCount(string query);
 }
