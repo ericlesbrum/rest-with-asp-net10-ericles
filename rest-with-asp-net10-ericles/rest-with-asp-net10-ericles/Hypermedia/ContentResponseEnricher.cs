@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Routing;
 using rest_with_asp_net10_ericles.Hypermedia.Abstract;
+using rest_with_asp_net10_ericles.Hypermedia.Utils;
 
 namespace rest_with_asp_net10_ericles.Hypermedia;
 
@@ -10,7 +11,8 @@ public abstract class ContentResponseEnricher<T> : IResponseEnricher where T : I
     public virtual bool CanEnrich(Type contentType)
     {
         return typeof(T).IsAssignableFrom(contentType)
-            || typeof(IEnumerable<T>).IsAssignableFrom(contentType);
+            || typeof(IEnumerable<T>).IsAssignableFrom(contentType)
+            || typeof(PagedSearchDTO<T>).IsAssignableFrom(contentType);
     }
 
     public async Task Enrich(ResultExecutingContext response)
@@ -26,6 +28,14 @@ public abstract class ContentResponseEnricher<T> : IResponseEnricher where T : I
             {
                 foreach (var item in contentList)
                 {
+                    await EnrichModel(item, urlHelper);
+                }
+            }
+            else if (objectResult.Value is PagedSearchDTO<T> pagedSearch)
+            {
+                foreach (var item in pagedSearch.List)
+                {
+                    item.Links?.Clear();
                     await EnrichModel(item, urlHelper);
                 }
             }
