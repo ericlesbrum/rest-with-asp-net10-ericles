@@ -48,5 +48,10 @@ namespace rest_with_asp_net10_ericles.Services
             var person = _repositoryPerson.Disable(id);
             return person?.Adapt<PersonDTO>();
         }
+
+        public List<PersonDTO> FindByName(string firstName, string lastName)
+        {
+            return _repositoryPerson.FindByName(firstName, lastName).Adapt<List<PersonDTO>>();
+        }
     }
 }

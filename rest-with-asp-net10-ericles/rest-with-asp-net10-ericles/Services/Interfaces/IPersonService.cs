@@ -10,4 +10,5 @@ public interface IPersonService
     PersonDTO Update(PersonDTO person);
     bool Delete(long id);
     PersonDTO? Disable(long id);
+    List<PersonDTO> FindByName(string firstName, string lastName);
 }

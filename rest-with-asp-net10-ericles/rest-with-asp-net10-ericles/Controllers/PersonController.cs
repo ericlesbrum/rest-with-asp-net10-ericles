@@ -110,4 +110,14 @@ public class PersonController : ControllerBase
         }
         return StatusCode(StatusCodes.Status200OK, patchedPerson);
     }
+
+    [HttpGet("find-by-name")]
+    [ProducesResponseType(200, Type = typeof(List<PersonDTO>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    public IActionResult GetByName([FromQuery] string firstName, [FromQuery] string lastName)
+    {
+        _logger.LogInformation("Fetching persons by name: {firstName} {lastName}", firstName, lastName);
+        return Ok(_personService.FindByName(firstName, lastName));
+    }
 }
