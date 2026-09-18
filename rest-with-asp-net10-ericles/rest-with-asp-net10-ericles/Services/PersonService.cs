@@ -80,13 +80,13 @@ namespace rest_with_asp_net10_ericles.Services
             var size = pageSize < 1 ? 1 : pageSize;
             var sort = (!string.IsNullOrWhiteSpace(sortDirection) &&
                 !sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase)) ? "asc" : "desc";
-            var whereClause = $" FROM Persons p WHERE 1=1 ";
+            var whereClause = $" FROM dbo.person p WHERE 1=1 ";
             if (!string.IsNullOrWhiteSpace(name))
-                whereClause += $" AND (p.FirstName LIKE '%{name}%') ";
+                whereClause += $" AND (p.first_name LIKE '%{name}%') ";
 
             var query = $@"
                 SELECT * {whereClause}
-                ORDER BY p.FirstName {sort}
+                ORDER BY p.first_name {sort}
                 OFFSET {offset} ROWS FETCH NEXT {size} ROWS ONLY
             ";
             var countQuery = $"SELECT COUNT(*) {whereClause}";
