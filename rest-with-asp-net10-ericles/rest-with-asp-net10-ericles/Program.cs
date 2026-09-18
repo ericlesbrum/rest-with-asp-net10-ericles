@@ -41,9 +41,9 @@ var app = builder.Build();
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
 app.UseRouting();
 app.UseCorsConfiguration(builder.Configuration);
+app.UseAuthorization();
 
 app.MapControllers();
 app.UseHATEOASRoutes();
