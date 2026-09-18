@@ -1,4 +1,5 @@
 ﻿using rest_with_asp_net10_ericles.Hypermedia.Abstract;
+using System.Xml.Serialization;
 
 namespace rest_with_asp_net10_ericles.Hypermedia.Utils;
 
@@ -9,6 +10,8 @@ public class PagedSearchDTO<T> where T : ISupportsHyperMedia
     public int TotalResults { get; set; }
     public string SortedFields { get; set; }
     public string SortDirections { get; set; } = "asc";
+
+    [XmlIgnore]
     public Dictionary<string, object> Filters { get; set; } = [];
 
     public List<T> List { get; set; } = [];

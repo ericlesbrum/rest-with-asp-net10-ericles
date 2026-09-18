@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
+using rest_with_asp_net10_ericles.Hypermedia.Utils;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
 namespace rest_with_asp_net10_ericles.Controllers;
@@ -18,14 +19,14 @@ public class PersonController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
-    [ProducesResponseType(200, Type = typeof(List<PersonDTO>))]
+    [HttpGet("{sortDirection}/{pageSize}/{page}")]
+    [ProducesResponseType(200, Type = typeof(PagedSearchDTO<PersonDTO>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    public IActionResult Get()
+    public IActionResult Get([FromRoute] string name, string sortDirection, int pageSize, int page)
     {
-        _logger.LogInformation("Fetching all persons");
-        return StatusCode(StatusCodes.Status200OK, _personService.FindAll());
+        _logger.LogInformation("Fetching persons with paged search: Name={name}, SortDirection={sortDirection}, PageSize={pageSize}, Page={page}", name, sortDirection, pageSize, page);
+        return Ok(_personService.FindWithPagedSearch(name, sortDirection, pageSize, page));
     }
 
     [HttpGet("{Id}")]
@@ -42,7 +43,7 @@ public class PersonController : ControllerBase
             return NotFound();
         }
 
-        return StatusCode(StatusCodes.Status200OK, person);
+        return Ok(person);
     }
 
     [HttpPost]
@@ -75,7 +76,7 @@ public class PersonController : ControllerBase
             return BadRequest("Person could not be updated.");
         }
         _logger.LogDebug("Person with ID: {Id} updated successfully", person.Id);
-        return StatusCode(StatusCodes.Status200OK, updatedPerson);
+        return Ok(updatedPerson);
     }
 
     [HttpDelete("{Id}")]
@@ -108,7 +109,7 @@ public class PersonController : ControllerBase
             _logger.LogWarning("Person with ID: {Id} not found for disabling", Id);
             return NotFound();
         }
-        return StatusCode(StatusCodes.Status200OK, patchedPerson);
+        return Ok(patchedPerson);
     }
 
     [HttpGet("find-by-name")]

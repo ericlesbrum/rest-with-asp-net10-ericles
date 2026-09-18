@@ -9,7 +9,7 @@ public static class CorsConfig
         var origins = configuration.GetSection("Cors:Origins").Get<string[]>();
         return origins ?? Array.Empty<string>();
     }
-    
+
     public static void AddCorsConfiguration(this IServiceCollection services, IConfiguration configuration)
     {
         var origins = GetAllowedOrigins(configuration);
@@ -32,8 +32,11 @@ public static class CorsConfig
 
         app.Use(async (context, next) =>
         {
+            var selfOrigin = context.Request.Scheme + $"://{context.Request.Host}";
             var origin = context.Request.Headers["Origin"].ToString();
-            if(!string.IsNullOrEmpty(origin) && !origins.Contains(origin, StringComparer.OrdinalIgnoreCase))
+            if (!string.IsNullOrEmpty(origin) 
+                && !origins.Contains(origin, StringComparer.OrdinalIgnoreCase) 
+                && !origin.Equals(selfOrigin, StringComparison.OrdinalIgnoreCase))
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
                 await context.Response.WriteAsync("CORS policy not allow.");

@@ -45,7 +45,8 @@ namespace rest_with_asp_net10_ericles.Services
             return entity.Adapt<PersonDTO>();
         }
 
-        public PersonDTO? Disable(long id) {
+        public PersonDTO? Disable(long id)
+        {
             var person = _repositoryPerson.Disable(id);
             return person?.Adapt<PersonDTO>();
         }
@@ -57,7 +58,7 @@ namespace rest_with_asp_net10_ericles.Services
 
         public PagedSearchDTO<PersonDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page)
         {
-            var (query, countQuery, sort, size, offset) = BuildQueries(name,sortDirection,pageSize,page);
+            var (query, countQuery, sort, size, offset) = BuildQueries(name, sortDirection, pageSize, page);
             var persons = _repositoryPerson.FindWithPagedSearch(query);
             var totalResults = _repositoryPerson.GetCount(countQuery);
             return new PagedSearchDTO<PersonDTO>
@@ -70,18 +71,18 @@ namespace rest_with_asp_net10_ericles.Services
             };
         }
 
-        private (string query, string countQuery, string sort, int size, int offset) 
+        private (string query, string countQuery, string sort, int size, int offset)
             BuildQueries(string name, string sortDirection, int pageSize, int page)
         {
-            page = Math.Max(1,page);
+            page = Math.Max(1, page);
 
-            var  offset = (page - 1) * pageSize;
+            var offset = (page - 1) * pageSize;
             var size = pageSize < 1 ? 1 : pageSize;
-            var sort = (!string.IsNullOrWhiteSpace(sortDirection) && 
+            var sort = (!string.IsNullOrWhiteSpace(sortDirection) &&
                 !sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase)) ? "asc" : "desc";
             var whereClause = $" FROM Persons p WHERE 1=1 ";
-            if(!string.IsNullOrWhiteSpace(name))
-                whereClause += $" AND p.FirstName LIKE '%{name}%' ";
+            if (!string.IsNullOrWhiteSpace(name))
+                whereClause += $" AND (p.FirstName LIKE '%{name}%') ";
 
             var query = $@"
                 SELECT * {whereClause}
