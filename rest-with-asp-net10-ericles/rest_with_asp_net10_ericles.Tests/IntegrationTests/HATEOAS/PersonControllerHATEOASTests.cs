@@ -8,7 +8,7 @@ using System.Text.RegularExpressions;
 
 namespace rest_with_asp_net10_ericles.Tests.IntegrationTests.HATEOAS;
 
-[TestCaseOrderer<PriorityOrderer>]
+[TestMethodOrderer<PriorityOrderer>]
 public class PersonControllerHATEOASTests : IClassFixture<SqlServerFixture>
 {
     private readonly HttpClient _httpClient;
@@ -128,32 +128,18 @@ public class PersonControllerHATEOASTests : IClassFixture<SqlServerFixture>
         AssertLinkPattern(content, "delete");
     }
 
-    [Fact(DisplayName = "05 - Find All Persons")]
+    [Fact(DisplayName = "05 - Find Paged With HATEOAS Persons")]
     [TestPriority(5)]
     public async Task FindAll_ShouldReturnLinksForEachPerson()
     {
-        // ---------------------------
-        // Arrange
-        // ---------------------------
-        // In this test, there is no explicit Arrange step, because
-        // we are directly calling the API without preparing additional
-        // data or mocking dependencies. The system under test is expected
-        // to already contain one or more persons.
-
-        // ---------------------------
         // Act
-        // ---------------------------
-        // Perform the HTTP GET request to retrieve all persons.
-        var response = await _httpClient.GetAsync("api/person/v2", TestContext.Current.CancellationToken);
+        var response = await _httpClient.GetAsync("api/person/v2/asc/10/1", TestContext.Current.CancellationToken);
         response.EnsureSuccessStatusCode(); // Ensures the response status code is 2xx.
 
         // Read the response content as a string.
         var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
 
-        // ---------------------------
         // Assert
-        // ---------------------------
-        // Extract all "id" values from the response JSON using Regex.
         var idMatches = Regex.Matches(content, @"""id"":\s*(\d+)");
         idMatches.Count.Should().BeGreaterThan(0, "There should be at least one person");
 

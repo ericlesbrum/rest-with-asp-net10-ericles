@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
+using rest_with_asp_net10_ericles.Hypermedia.Utils;
 using rest_with_asp_net10_ericles.Tests.IntegrationTests.Tools;
 using RestWithASPNET10Erudio.Tests.IntegrationTests.Tools;
 using System.Net;
@@ -8,7 +9,7 @@ using System.Net.Http.Json;
 
 namespace rest_with_asp_net10_ericles.Tests.IntegrationTests.Person.JSON;
 
-[TestCaseOrderer<PriorityOrderer>]
+[TestMethodOrderer<PriorityOrderer>]
 public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
 {
     private readonly HttpClient _httpClient;
@@ -150,27 +151,36 @@ public class PersonControllerJsonTests : IClassFixture<SqlServerFixture>
     {
         // Arrange & Act
         var response = await _httpClient
-            .GetAsync("api/person/v2", TestContext.Current.CancellationToken);
+            .GetAsync("api/person/v2/asc/10/1", TestContext.Current.CancellationToken);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var list = await response.Content
-                .ReadFromJsonAsync<List<PersonDTO>>(TestContext.Current.CancellationToken);
+        var page = await response.Content
+                .ReadFromJsonAsync<PagedSearchDTO<PersonDTO>>(TestContext.Current.CancellationToken);
+
+        page.Should().NotBeNull();
+
+        var list = page?.List;
 
         list.Should().NotBeNull();
         list.Count.Should().BeGreaterThan(0);
 
-        var first = list.First(p => p.FirstName == "Ayrton");
-        first.LastName.Should().Be("Senna");
-        first.Address.Should().Be("São Paulo - Brasil");
-        first.Enabled.Should().BeTrue();
+        var first = list.First(p => p.FirstName == "Abbie");
+        first.LastName.Should().Be("Bassford");
+        first.Address.Should().Be("PO Box 88145");
+        first.Enabled.Should().BeFalse();
         first.Gender.Should().Be("Male");
 
-        var fifth = list.First(p => p.FirstName == "Ada");
-        fifth.LastName.Should().Be("Lovelace");
-        fifth.Address.Should().Be("London - England");
-        fifth.Enabled.Should().BeTrue();
-        fifth.Gender.Should().Be("Female");
+        var third = list.First(p => p.FirstName == "Abner");
+        third.LastName.Should().Be("Castilla");
+        third.Address.Should().Be("8th Floor");
+        third.Enabled.Should().BeFalse();
+        third.Gender.Should().Be("Male");
+
+        page.CurrentPage.Should().BeGreaterThan(0);
+        page.TotalResults.Should().BeGreaterThan(0);
+        page.PageSize.Should().BeGreaterThan(0);
+        page.SortDirections.Should().NotBeNull();
     }
 }

@@ -1,16 +1,18 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
+using rest_with_asp_net10_ericles.Hypermedia.Utils;
 using rest_with_asp_net10_ericles.Tests.IntegrationTests.Tools;
 using RestWithASPNET10Erudio.Tests.IntegrationTests.Tools;
 using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 
 namespace rest_with_asp_net10_ericles.Tests.IntegrationTests.Person.XML;
 
-[TestCaseOrderer<PriorityOrderer>]
+[TestMethodOrderer<PriorityOrderer>]
 public class PersonControllerXmlTests : IClassFixture<SqlServerFixture>
 {
     private readonly HttpClient _httpClient;
@@ -26,6 +28,10 @@ public class PersonControllerXmlTests : IClassFixture<SqlServerFixture>
                 BaseAddress = new Uri("http://localhost")
             }
         );
+
+        _httpClient.DefaultRequestHeaders.Accept.Clear();
+        _httpClient.DefaultRequestHeaders.Accept.Add(
+            new MediaTypeWithQualityHeaderValue("application/xml"));
     }
 
     [Fact(DisplayName = "01 - Create Person")]
@@ -150,27 +156,36 @@ public class PersonControllerXmlTests : IClassFixture<SqlServerFixture>
     {
         // Arrange & Act
         var response = await _httpClient
-            .GetAsync("api/person/v2", TestContext.Current.CancellationToken);
+            .GetAsync("api/person/v2/asc/10/1", TestContext.Current.CancellationToken);
 
         // Assert
         response.EnsureSuccessStatusCode();
 
-        var list = await XmlHelper
-            .ReadFromXmlAsync<List<PersonDTO>>(response);
+        var page = await XmlHelper
+            .ReadFromXmlAsync<PagedSearchDTO<PersonDTO>>(response);
+
+        page.Should().NotBeNull();
+
+        var list = page?.List;
 
         list.Should().NotBeNull();
         list.Count.Should().BeGreaterThan(0);
 
-        var first = list.First(p => p.FirstName == "Ayrton");
-        first.LastName.Should().Be("Senna");
-        first.Address.Should().Be("São Paulo - Brasil");
-        first.Enabled.Should().BeTrue();
+        var first = list.First(p => p.FirstName == "Abbie");
+        first.LastName.Should().Be("Bassford");
+        first.Address.Should().Be("PO Box 88145");
+        first.Enabled.Should().BeFalse();
         first.Gender.Should().Be("Male");
 
-        var third = list.First(p => p.FirstName == "Nelson");
-        third.LastName.Should().Be("Mandela");
-        third.Address.Should().Be("Mvezo - South Africa");
-        third.Enabled.Should().BeTrue();
+        var third = list.First(p => p.FirstName == "Abner");
+        third.LastName.Should().Be("Castilla");
+        third.Address.Should().Be("8th Floor");
+        third.Enabled.Should().BeFalse();
         third.Gender.Should().Be("Male");
+
+        page.CurrentPage.Should().BeGreaterThan(0);
+        page.TotalResults.Should().BeGreaterThan(0);
+        page.PageSize.Should().BeGreaterThan(0);
+        page.SortDirections.Should().NotBeNull();
     }
 }

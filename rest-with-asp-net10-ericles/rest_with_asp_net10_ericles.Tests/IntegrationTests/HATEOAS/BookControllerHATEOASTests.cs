@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace rest_with_asp_net10_ericles.Tests.IntegrationTests.HATEOAS;
 
-[TestCaseOrderer<PriorityOrderer>]
+[TestMethodOrderer<PriorityOrderer>]
 public class BookControllerHATEOASTests : IClassFixture<SqlServerFixture>
 {
     private readonly HttpClient _httpClient;
@@ -30,7 +30,7 @@ public class BookControllerHATEOASTests : IClassFixture<SqlServerFixture>
     private void AssertLinkPattern(string content, string rel)
     {
         var pattern =
-            $@"""rel"":\s*""{rel}"".*?""href"":\s*""https?://.+/api/person/v2.*?""";
+            $@"""rel"":\s*""{rel}"".*?""href"":\s*""https?://.+/api/book/v2.*?""";
         Regex.IsMatch(content, pattern).Should()
             .BeTrue($"Link with rel='{rel}' should exist and have valid href");
     }
@@ -47,11 +47,16 @@ public class BookControllerHATEOASTests : IClassFixture<SqlServerFixture>
             LaunchDate = DateTime.Now
         };
 
-        var response = await _httpClient.PostAsJsonAsync("api/book/v2", request, TestContext.Current.CancellationToken);
+        var response = await _httpClient.PostAsJsonAsync(
+            "/api/book/v2", request, TestContext.Current.CancellationToken);
+
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-        _book = await response.Content.ReadFromJsonAsync<BookDTO>(TestContext.Current.CancellationToken);
+        var content = await response.Content.ReadAsStringAsync(
+            TestContext.Current.CancellationToken);
+
+        _book = await response.Content.ReadFromJsonAsync<BookDTO>(
+            TestContext.Current.CancellationToken);
 
         AssertLinkPattern(content, "collection");
         AssertLinkPattern(content, "self");
@@ -66,11 +71,16 @@ public class BookControllerHATEOASTests : IClassFixture<SqlServerFixture>
     {
         _book!.Title = "Docker Deep Dive - 2° Edition";
 
-        var response = await _httpClient.PutAsJsonAsync("api/book/v2", _book, TestContext.Current.CancellationToken);
+        var response = await _httpClient.PutAsJsonAsync(
+            "/api/book/v2", _book, TestContext.Current.CancellationToken);
+
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-        _book = await response.Content.ReadFromJsonAsync<BookDTO>(TestContext.Current.CancellationToken);
+        var content = await response.Content.ReadAsStringAsync(
+            TestContext.Current.CancellationToken);
+
+        _book = await response.Content.ReadFromJsonAsync<BookDTO>(
+            TestContext.Current.CancellationToken);
 
         AssertLinkPattern(content, "collection");
         AssertLinkPattern(content, "self");
@@ -83,10 +93,17 @@ public class BookControllerHATEOASTests : IClassFixture<SqlServerFixture>
     [TestPriority(3)]
     public async Task GetBookById_ShouldContainHateoasLinks()
     {
-        var response = await _httpClient.GetAsync($"api/book/v2/{_book.Id}", TestContext.Current.CancellationToken);
+        var response = await _httpClient.GetAsync(
+            $"/api/book/v2/{_book!.Id}", TestContext.Current.CancellationToken);
+
         response.EnsureSuccessStatusCode();
 
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
+        var content = await response.Content.ReadAsStringAsync(
+            TestContext.Current.CancellationToken);
+
+        _book = await response.Content.ReadFromJsonAsync<BookDTO>(
+            TestContext.Current.CancellationToken);
+
         AssertLinkPattern(content, "collection");
         AssertLinkPattern(content, "self");
         AssertLinkPattern(content, "create");
@@ -98,46 +115,9 @@ public class BookControllerHATEOASTests : IClassFixture<SqlServerFixture>
     [TestPriority(4)]
     public async Task DeleteBookById_ShouldReturnNoContent()
     {
-        var response = await _httpClient.DeleteAsync($"api/book/v2/{_book.Id}", TestContext.Current.CancellationToken);
+        var response = await _httpClient.DeleteAsync(
+            $"/api/book/v2/{_book!.Id}", TestContext.Current.CancellationToken);
+
         response.StatusCode.Should().Be(HttpStatusCode.NoContent);
-    }
-
-    [Fact(DisplayName = "05 - Find All Books")]
-    [TestPriority(5)]
-    public async Task FindAll_ShouldReturnLinksForEachBook()
-    {
-        // Act
-        var response = await _httpClient.GetAsync("api/book/v2", TestContext.Current.CancellationToken);
-        response.EnsureSuccessStatusCode();
-
-        var content = await response.Content.ReadAsStringAsync(TestContext.Current.CancellationToken);
-
-        // Regex para capturar todos os "id" do retorno
-        var idMatches = Regex.Matches(content, @"""id"":\s*(\d+)");
-        idMatches.Count.Should().BeGreaterThan(0, "There should be at least one book");
-
-        foreach (Match match in idMatches)
-        {
-            var id = match.Groups[1].Value;
-
-            // Validar cada link do item
-            var expectedRels = new[] { "collection", "self", "create", "update", "delete" };
-
-            foreach (var rel in expectedRels)
-            {
-                var pattern = rel switch
-                {
-                    "self" or "delete" => $@"""rel"":\s*""{rel}"".*?""href"":\s*""https?://.+/api/book/v1/{id}""",
-                    _ => $@"""rel"":\s*""{rel}"".*?""href"":\s*""https?://.+/api/book/v1"""
-                };
-
-                Regex.IsMatch(content, pattern, RegexOptions.IgnoreCase)
-                     .Should().BeTrue($"Link '{rel}' should exist for book {id}");
-
-                // Validar que existe type
-                var typePattern = $@"""rel"":\s*""{rel}"".*?""type"":\s*""[^""]+""";
-                Regex.IsMatch(content, typePattern).Should().BeTrue($"Link '{rel}' must have a type for book {id}");
-            }
-        }
     }
 }

@@ -3,15 +3,15 @@ using Xunit.v3;
 
 namespace RestWithASPNET10Erudio.Tests.IntegrationTests.Tools
 {
-    public class PriorityOrderer : ITestCaseOrderer
+    public class PriorityOrderer : ITestMethodOrderer
     {
-        public IReadOnlyCollection<TTestCase> OrderTestCases<TTestCase>
-            (IReadOnlyCollection<TTestCase> testCases) where TTestCase
-            : ITestCase
+        public IReadOnlyCollection<TTestMethod?> OrderTestMethods<TTestMethod>
+            (IReadOnlyCollection<TTestMethod?> testMethods) where TTestMethod
+            : ITestMethod
         {
-            var sortedMethods = testCases.OrderBy(tc =>
-                tc is IXunitTestCase xunitTestCase
-                    ? (xunitTestCase.TestMethod.Method
+            var sortedMethods = testMethods.OrderBy(tm =>
+                tm is IXunitTestMethod xunitTestMethod
+                    ? (xunitTestMethod.Method
                         .GetMatchingCustomAttributes(typeof(TestPriorityAttribute))
                         .FirstOrDefault() as TestPriorityAttribute)?.Priority ?? 0
                     : 0);
