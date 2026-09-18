@@ -58,40 +58,8 @@ namespace rest_with_asp_net10_ericles.Services
 
         public PagedSearchDTO<PersonDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page)
         {
-            var (query, countQuery, sort, size, offset) = BuildQueries(name, sortDirection, pageSize, page);
-            var persons = _repositoryPerson.FindWithPagedSearch(query);
-            var totalResults = _repositoryPerson.GetCount(countQuery);
-            return new PagedSearchDTO<PersonDTO>
-            {
-                CurrentPage = page,
-                List = persons.Adapt<List<PersonDTO>>(),
-                PageSize = size,
-                SortDirections = sort,
-                TotalResults = totalResults
-            };
-        }
-
-        private (string query, string countQuery, string sort, int size, int offset)
-            BuildQueries(string name, string sortDirection, int pageSize, int page)
-        {
-            page = Math.Max(1, page);
-
-            var offset = (page - 1) * pageSize;
-            var size = pageSize < 1 ? 1 : pageSize;
-            var sort = (!string.IsNullOrWhiteSpace(sortDirection) &&
-                !sortDirection.Equals("desc", StringComparison.OrdinalIgnoreCase)) ? "asc" : "desc";
-            var whereClause = $" FROM dbo.person p WHERE 1=1 ";
-            if (!string.IsNullOrWhiteSpace(name))
-                whereClause += $" AND (p.first_name LIKE '%{name}%') ";
-
-            var query = $@"
-                SELECT * {whereClause}
-                ORDER BY p.first_name {sort}
-                OFFSET {offset} ROWS FETCH NEXT {size} ROWS ONLY
-            ";
-            var countQuery = $"SELECT COUNT(*) {whereClause}";
-
-            return (query, countQuery, sort, size, offset);
+            var pageResult = _repositoryPerson.FindWithPagedSearch(name, sortDirection, pageSize, page);
+            return pageResult.Adapt<PagedSearchDTO<PersonDTO>>();
         }
     }
 }
