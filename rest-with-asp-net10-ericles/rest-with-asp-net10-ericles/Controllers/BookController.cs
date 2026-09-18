@@ -76,7 +76,7 @@ namespace rest_with_asp_net10_ericles.Controllers
             return StatusCode(StatusCodes.Status200OK, updatedBook);
         }
 
-        [HttpDelete]
+        [HttpDelete("{Id}")]
         [ProducesResponseType(204, Type = typeof(BookDTO))]
         [ProducesResponseType(400)]
         [ProducesResponseType(401)]

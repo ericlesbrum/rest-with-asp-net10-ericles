@@ -23,7 +23,11 @@ public class PersonController : ControllerBase
     [ProducesResponseType(200, Type = typeof(PagedSearchDTO<PersonDTO>))]
     [ProducesResponseType(400)]
     [ProducesResponseType(401)]
-    public IActionResult Get([FromRoute] string name, string sortDirection, int pageSize, int page)
+    public IActionResult Get(
+        [FromRoute] string sortDirection,
+        [FromRoute] int pageSize,
+        [FromRoute] int page,
+        [FromQuery] string name = "")
     {
         _logger.LogInformation("Fetching persons with paged search: Name={name}, SortDirection={sortDirection}, PageSize={pageSize}, Page={page}", name, sortDirection, pageSize, page);
         return Ok(_personService.FindWithPagedSearch(name, sortDirection, pageSize, page));
