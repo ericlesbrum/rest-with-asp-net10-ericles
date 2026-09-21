@@ -28,4 +28,17 @@ public class FileController : ControllerBase
         _logger.LogInformation($"File {fileDetail.DocumentName} uploaded successfully.");
         return Ok(fileDetail);
     }
+
+    [HttpPost("uploadMultipleFiles")]
+    [Consumes("multipart/form-data")]
+    [ProducesResponseType(200, Type = typeof(List<FileDetailDTO>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [Produces("application/json", "application/xml")]
+    public async Task<IActionResult> UploadMultipleFiles([FromForm] MultipleFilesUploadDTO input)
+    {
+        var fileDetail = await _fileService.SaveFilesToDisk(input.Files);
+        _logger.LogInformation($"Files {fileDetail} uploaded successfully.");
+        return Ok(fileDetail);
+    }
 }
