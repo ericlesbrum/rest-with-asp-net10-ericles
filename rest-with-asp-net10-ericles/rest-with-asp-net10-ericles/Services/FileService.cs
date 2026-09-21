@@ -20,14 +20,39 @@ public class FileService : IFileService
         }
     }
 
-    public byte[] GetFile(string fileName)
+    public byte[] GetFile(string file)
     {
         throw new NotImplementedException();
     }
 
-    public Task<FileDetailDTO> SaveFileToDisk(IFormFile file)
+    public async Task<FileDetailDTO> SaveFileToDisk(IFormFile file)
     {
-        throw new NotImplementedException();
+        if (file == null || file.Length == 0)
+            throw new ArgumentException("File is empty or null");
+
+        var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
+
+        if(!_allowedExtension.Contains(fileExtension))
+            throw new ArgumentException("File type is not allowed");
+
+        var documentName = Path.GetFileName(file.FileName);
+        var destination = Path.Combine(_basePath, documentName);
+
+        var baseUrl = $"{_context.HttpContext.Request.Scheme}://{_context.HttpContext.Request.Host}";
+
+        var fileDetail = new FileDetailDTO
+        {
+            DocumentName = documentName,
+            DocType = file.ContentType,
+            DocUrl = $"{baseUrl}/api/file/v2/downloadFile{documentName}"
+        };
+
+        using (var stream = new FileStream(destination, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        return fileDetail;
     }
 
     public Task<List<FileDetailDTO>> SaveFilesToDisk(List<IFormFile> files)
