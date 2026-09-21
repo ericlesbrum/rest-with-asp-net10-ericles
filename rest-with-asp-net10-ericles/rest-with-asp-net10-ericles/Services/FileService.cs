@@ -44,7 +44,7 @@ public class FileService : IFileService
         {
             DocumentName = documentName,
             DocType = file.ContentType,
-            DocUrl = $"{baseUrl}/api/file/v2/downloadFile{documentName}"
+            DocUrl = $"{baseUrl}/api/file/v2/downloadFile/{documentName}"
         };
 
         using (var stream = new FileStream(destination, FileMode.Create))

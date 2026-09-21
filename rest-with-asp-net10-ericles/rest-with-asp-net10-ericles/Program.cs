@@ -33,6 +33,10 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IBookService, BookService>();
 
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddScoped<IFileService, FileService>();
+
 builder.Services.AddScoped(typeof(IRepository<>),typeof(GenericRepository<>));
 
 var app = builder.Build();
