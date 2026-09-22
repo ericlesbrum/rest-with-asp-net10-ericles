@@ -41,4 +41,20 @@ public class FileController : ControllerBase
         _logger.LogInformation($"Files {fileDetail} uploaded successfully.");
         return Ok(fileDetail);
     }
+
+    [HttpGet("downloadFile/{fileName}")]
+    [ProducesResponseType(200, Type = typeof(byte[]))]
+    [ProducesResponseType(204)]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [Produces("application/octet-stream")]
+    public async Task<IActionResult> DownloadFile(string fileName)
+    {
+        var buffer = _fileService.GetFile(fileName);
+        if (buffer == null || buffer.Length == 0)
+            return NoContent();
+
+        var contentType = $"application/{Path.GetExtension(fileName).TrimStart('.')}";
+        return File(buffer, contentType, fileName);
+    }
 }

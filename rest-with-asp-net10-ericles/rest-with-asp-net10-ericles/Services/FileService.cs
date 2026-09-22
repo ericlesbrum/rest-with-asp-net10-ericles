@@ -8,7 +8,7 @@ public class FileService : IFileService
     private readonly string _basePath;
     private readonly IHttpContextAccessor _context;
 
-    private static readonly HashSet<string> _allowedExtension = new HashSet<string> { ".jpg", ".jpeg", ".png", ".pdf", ".txt" };
+    private static readonly HashSet<string> _allowedExtensions = new() { ".txt", ".pdf", ".png", ".jpg", ".jpeg", ".docx", ".mp3" };
 
     public FileService(IHttpContextAccessor context)
     {
@@ -20,9 +20,12 @@ public class FileService : IFileService
         }
     }
 
-    public byte[] GetFile(string file)
+    public byte[] GetFile(string fileName)
     {
-        throw new NotImplementedException();
+        var filePath = Path.Combine(_basePath, fileName);
+        if (!File.Exists(filePath))
+            return null;
+        return File.ReadAllBytes(filePath);
     }
 
     public async Task<FileDetailDTO> SaveFileToDisk(IFormFile file)
@@ -32,7 +35,7 @@ public class FileService : IFileService
 
         var fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
-        if(!_allowedExtension.Contains(fileExtension))
+        if(!_allowedExtensions.Contains(fileExtension))
             throw new ArgumentException("File type is not allowed");
 
         var documentName = Path.GetFileName(file.FileName);
