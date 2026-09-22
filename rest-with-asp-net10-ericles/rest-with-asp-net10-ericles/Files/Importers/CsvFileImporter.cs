@@ -1,12 +1,37 @@
-﻿using rest_with_asp_net10_ericles.Data.DTO.V2;
+﻿using CsvHelper;
+using CsvHelper.Configuration;
+using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Files.Importers.Contract;
+using System.Globalization;
 
 namespace rest_with_asp_net10_ericles.Files.Importers;
 
 internal class CsvFileImporter : IFileImporter
 {
-    public Task<List<PersonDTO>> ImportFileAsync(Stream fileStream)
+    public async Task<List<PersonDTO>> ImportFileAsync(Stream fileStream)
     {
-        throw new NotImplementedException();
+        using var reader = new StreamReader(fileStream);
+        using var csv = new CsvReader(reader, new CsvConfiguration(CultureInfo.InvariantCulture)
+        {
+            HasHeaderRecord = true,
+            TrimOptions = TrimOptions.Trim,
+            IgnoreBlankLines = true,
+        });
+
+        var people = new List<PersonDTO>();
+
+        await foreach(var record in csv.GetRecordsAsync<dynamic>())
+        {
+            var person = new PersonDTO
+            {
+                FirstName = record.first_name,
+                LastName = record.last_name,
+                Address = record.address,
+                Gender = record.gender,
+                Enabled = true
+            };
+            people.Add(person);
+        }
+        return people;
     }
 }
