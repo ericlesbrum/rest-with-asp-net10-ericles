@@ -1,5 +1,7 @@
 using rest_with_asp_net10_ericles;
 using rest_with_asp_net10_ericles.Configurations;
+using rest_with_asp_net10_ericles.Files.Importers;
+using rest_with_asp_net10_ericles.Files.Importers.Factory;
 using rest_with_asp_net10_ericles.Hypermedia.Filters;
 using rest_with_asp_net10_ericles.Repositories;
 using rest_with_asp_net10_ericles.Repositories.Generics;
@@ -33,6 +35,9 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddScoped<IBookService, BookService>();
 
+builder.Services.AddScoped<CsvFileImporter>();
+builder.Services.AddScoped<XlsxImporter>();
+builder.Services.AddScoped<FileImporterFactory>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IFileService, FileService>();
