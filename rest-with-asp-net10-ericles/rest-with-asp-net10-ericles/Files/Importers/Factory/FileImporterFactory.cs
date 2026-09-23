@@ -7,12 +7,17 @@ public class FileImporterFactory
     private readonly IServiceProvider _serviceProvider;
     private readonly ILogger<FileImporterFactory> _logger;
 
+    public FileImporterFactory(IServiceProvider serviceProvider, ILogger<FileImporterFactory> logger)
+    {
+        _serviceProvider = serviceProvider;
+        _logger = logger;
+    }
+
     public IFileImporter GetImporter(string fileName)
     {
         if (fileName.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
         {
-            _logger.LogInformation(
-                    "Selected CSV file importer for file: {FileName}", fileName);
+            _logger.LogInformation("Selected CSV file importer for file: {fileName}", fileName);
             return _serviceProvider.GetRequiredService<CsvFileImporter>();
         }
         else if (fileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
