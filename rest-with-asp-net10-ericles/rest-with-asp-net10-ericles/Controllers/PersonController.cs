@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Cors;
+﻿using DocumentFormat.OpenXml.Office2013.Word;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Hypermedia.Utils;
@@ -124,5 +125,31 @@ public class PersonController : ControllerBase
     {
         _logger.LogInformation("Fetching persons by name: {firstName} {lastName}", firstName, lastName);
         return Ok(_personService.FindByName(firstName, lastName));
+    }
+
+    [HttpPost("massCreation")]
+    [ProducesResponseType(200, Type = typeof(List<PersonDTO>))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    public async Task<IActionResult> MassCreation([FromForm] IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+        {
+            _logger.LogWarning("No file uploaded for mass creation");
+            return BadRequest("File uploaded");
+        }
+
+        _logger.LogInformation("Starting mass creation from uploaded file :{filename}", file.FileName);
+
+        var persons = await _personService.MassCreationAsync(file);
+        if (persons == null)
+        {
+            _logger.LogError("Mass Creation failed for file: {fileName}", file.FileName);
+            return NoContent();
+        }
+
+        _logger.LogInformation("Mass creation completed successfully with {count} records", persons.Count);
+
+        return Ok(persons);
     }
 }
