@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
+using rest_with_asp_net10_ericles.Files.Exporters;
 using rest_with_asp_net10_ericles.Hypermedia.Utils;
 using rest_with_asp_net10_ericles.Services.Interfaces;
 
@@ -149,5 +150,45 @@ public class PersonController : ControllerBase
         _logger.LogInformation("Mass creation completed successfully with {count} records", persons.Count);
 
         return Ok(persons);
+    }
+
+    [HttpGet("exportPage/{sortDirection}/{pageSize}/{page}")]
+    [ProducesResponseType(200, Type = typeof(FileContentResult))]
+    [ProducesResponseType(400)]
+    [ProducesResponseType(401)]
+    [ProducesResponseType(415)]
+    [Produces(MediaTypes.ApplicationXlsx, MediaTypes.ApplicationCsv)]
+    public IActionResult ExportPage(string sortDirection, int pageSize, int page, [FromQuery] string name = "")
+    {
+        var acceptHeader = Request.Headers["Accept"].ToString();
+        if (string.IsNullOrWhiteSpace(acceptHeader))
+            return BadRequest("Accept header is required");
+
+        _logger.LogInformation(
+                "Exporting persons with paged search: {name}, {sortDirection}, {pageSize}, {page}, {acceptHeader}",
+                name, sortDirection, pageSize, page, acceptHeader);
+
+        try
+        {
+            var fileResult = _personService.ExportPage(page, pageSize, sortDirection, acceptHeader, name);
+            return fileResult;
+        }
+        catch (NotSupportedException ex)
+        {
+            _logger.LogWarning(ex, "Unsupported export format " +
+                "requested: {AcceptHeader}", acceptHeader);
+            return StatusCode(
+                StatusCodes.Status415UnsupportedMediaType, ex.Message);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Unexpected error " +
+                "while exporting data");
+
+            return StatusCode(
+                StatusCodes.Status500InternalServerError,
+                "Internal Server Error");
+        }
+
     }
 }
