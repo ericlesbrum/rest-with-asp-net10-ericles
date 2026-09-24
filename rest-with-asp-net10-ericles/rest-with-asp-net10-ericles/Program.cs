@@ -1,5 +1,7 @@
 using rest_with_asp_net10_ericles;
 using rest_with_asp_net10_ericles.Configurations;
+using rest_with_asp_net10_ericles.Files.Exporters;
+using rest_with_asp_net10_ericles.Files.Exporters.Factory;
 using rest_with_asp_net10_ericles.Files.Importers;
 using rest_with_asp_net10_ericles.Files.Importers.Factory;
 using rest_with_asp_net10_ericles.Hypermedia.Filters;
@@ -38,6 +40,10 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<CsvFileImporter>();
 builder.Services.AddScoped<XlsxImporter>();
 builder.Services.AddScoped<FileImporterFactory>();
+
+builder.Services.AddScoped<CsvExporter>();
+builder.Services.AddScoped<XlsxExporter>();
+builder.Services.AddScoped<FileExporterFactory>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IFileService, FileService>();
