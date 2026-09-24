@@ -20,7 +20,7 @@ namespace rest_with_asp_net10_ericles.Files.Exporters
                 HasHeaderRecord = true,
             });
 
-            csv.WriteRecord(persons);
+            csv.WriteRecords(persons);
             streamWriter.Flush();
 
             var filesBytes = memoryStream.ToArray();
