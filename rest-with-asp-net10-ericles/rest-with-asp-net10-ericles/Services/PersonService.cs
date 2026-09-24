@@ -1,11 +1,14 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using rest_with_asp_net10_ericles.Data.DTO.V2;
+using rest_with_asp_net10_ericles.Files.Exporters.Factory;
 using rest_with_asp_net10_ericles.Files.Importers.Factory;
 using rest_with_asp_net10_ericles.Hypermedia.Utils;
 using rest_with_asp_net10_ericles.Model;
 using rest_with_asp_net10_ericles.Repositories.Interfaces;
 using rest_with_asp_net10_ericles.Services.Interfaces;
+using Serilog.Core;
 
 namespace rest_with_asp_net10_ericles.Services
 {
@@ -13,12 +16,15 @@ namespace rest_with_asp_net10_ericles.Services
     {
         private readonly IPersonRepository _repositoryPerson;
         private readonly FileImporterFactory _fileImporterFactory;
+        private readonly FileExporterFactory _fileExporterFactory;
         private readonly ILogger<PersonService> _logger;
 
-        public PersonService(IPersonRepository personRepository, FileImporterFactory fileImporterFactory, ILogger<PersonService> logger)
+        public PersonService(IPersonRepository personRepository, FileImporterFactory fileImporterFactory, FileExporterFactory fileExporterFactory,
+            ILogger<PersonService> logger)
         {
             _repositoryPerson = personRepository;
             _fileImporterFactory = fileImporterFactory;
+            _fileExporterFactory = fileExporterFactory;
             _logger = logger;
         }
 
@@ -91,6 +97,28 @@ namespace rest_with_asp_net10_ericles.Services
                 _logger.LogError(ex, "Error during mass creation from file: {FileName}", file.FileName);
                 throw;
             }
+        }
+
+        public FileContentResult ExportPage(int page, int pageSize, string sortDirection, string acceptHeader, string name)
+        {
+            _logger.LogInformation(
+                "Exporting page: {page}, {pageSize}, {sortDirection}, {acceptHeader}, {name}",
+                page, pageSize, sortDirection, acceptHeader, name);
+            var content = FindWithPagedSearch(name, sortDirection, pageSize, page);
+
+            try
+            {
+                var exporter = _fileExporterFactory.GetExporter(acceptHeader);
+                var persons = content.List.Adapt<List<PersonDTO>>();
+                return exporter.ExportFile(persons);
+            }
+            catch (NotSupportedException ex)
+            {
+                _logger.LogError(ex, "Unsupported export format requested: {AcceptHeader}", acceptHeader);
+                throw;
+            }
+
+            
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using rest_with_asp_net10_ericles.Data.DTO.V2;
+﻿using Microsoft.AspNetCore.Mvc;
+using rest_with_asp_net10_ericles.Data.DTO.V2;
 using rest_with_asp_net10_ericles.Hypermedia.Utils;
 
 namespace rest_with_asp_net10_ericles.Services.Interfaces;
@@ -14,4 +15,5 @@ public interface IPersonService
     List<PersonDTO> FindByName(string firstName, string lastName);
     PagedSearchDTO<PersonDTO> FindWithPagedSearch(string name, string sortDirection, int pageSize, int page);
     Task<List<PersonDTO>> MassCreationAsync(IFormFile file);
+    FileContentResult ExportPage(int page, int pageSize, string sortDirection, string acceptHeader, string name);
 }
