@@ -29,6 +29,7 @@ builder.Services.AddRouteConfig();
 
 builder.Services.AddCorsConfiguration(builder.Configuration);
 builder.Services.AddHATEOASConfiguration();
+builder.Services.AddEmailConfiguration(builder.Configuration);
 
 builder.Services.AddDatabaseConfig(builder.Configuration);
 builder.Services.AddEvolveConfig(builder.Configuration, builder.Environment);
