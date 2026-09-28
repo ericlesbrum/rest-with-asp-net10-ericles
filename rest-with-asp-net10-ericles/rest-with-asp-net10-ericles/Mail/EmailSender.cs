@@ -1,4 +1,6 @@
-﻿using MimeKit;
+﻿using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
 using rest_with_asp_net10_ericles.Mail.Settings;
 
 namespace rest_with_asp_net10_ericles.Mail;
@@ -47,6 +49,56 @@ public class EmailSender
         else
             _logger.LogWarning("Attachment file not found: {FilePath}", filePath);
         return this;
+    }
+
+    public void Send()
+    {
+        var message = new MimeMessage();
+
+        message.From.Add(new MailboxAddress(_emailSettings.From, _emailSettings.Username));
+        message.To.AddRange(_recipients);
+        message.Subject = _subject ?? _emailSettings.Subject ?? "No Subject";
+
+        var bodyBuilder = new BodyBuilder
+        {
+            TextBody = _body ?? _emailSettings.Message ?? ""
+        };
+
+        if (!string.IsNullOrWhiteSpace(_attachement))
+        {
+            var filename = Path.GetFileName(_attachement);
+            bodyBuilder.Attachments.Add(_attachement, File.ReadAllBytes(_attachement));
+        }
+
+        message.Body = bodyBuilder.ToMessageBody();
+
+        try
+        {
+            using var client = new SmtpClient();
+            client.Connect(_emailSettings.Host, _emailSettings.Port, _emailSettings.Ssl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
+
+            if (_emailSettings.Properties.SmtpAuth)
+                client.Authenticate(_emailSettings.Username, _emailSettings.Password);
+
+            client.Authenticate(_emailSettings.Username, _emailSettings.Password);
+            client.Send(message);
+            client.Disconnect(true);
+            _logger.LogInformation("Email successfully sent to {Recipients}", string.Join(";", _recipients));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to send email to {Recipients}", string.Join(";", _recipients));
+            throw;
+        }
+        finally
+        {
+            Reset();
+        }
+    }
+
+    private void Reset()
+    {
+        throw new NotImplementedException();
     }
 
     private MailboxAddress ParseReciptients(string to)

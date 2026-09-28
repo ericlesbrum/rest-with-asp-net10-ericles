@@ -9,6 +9,6 @@ public class EmailSettings
     public string From { get; set; } = string.Empty;
     public string Subject { get; set; } = string.Empty;
     public string Message { get; set; } = string.Empty;
-    public bool Sssl { get; set; }
+    public bool Ssl { get; set; }
     public MailSettings Properties { get; set; } = new MailSettings();
 }
