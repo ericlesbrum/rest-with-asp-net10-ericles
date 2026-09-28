@@ -1,4 +1,5 @@
-﻿using MailKit.Net.Smtp;
+﻿using DocumentFormat.OpenXml.Office.CustomUI;
+using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
 using rest_with_asp_net10_ericles.Mail.Settings;
@@ -98,11 +99,30 @@ public class EmailSender
 
     private void Reset()
     {
-        throw new NotImplementedException();
+        _to = null;
+        _subject = null;
+        _body = null;
+        _recipients.Clear();
+        _attachement = null;
     }
 
-    private MailboxAddress ParseReciptients(string to)
+    private IEnumerable<MailboxAddress> ParseReciptients(string to)
     {
-        throw new NotImplementedException();
+        var toWihtoutSpaces = to.Replace(" ", string.Empty);
+        var recipients = toWihtoutSpaces.Split(';', StringSplitOptions.RemoveEmptyEntries);
+        var list = new List<MailboxAddress>();
+        foreach (var address in recipients)
+        {
+            try
+            {
+                var mailbox = MailboxAddress.Parse(address);
+                list.Add(mailbox);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Invalid e-mail address: {Address}", address);
+            }
+        }
+        return list;
     }
 }
