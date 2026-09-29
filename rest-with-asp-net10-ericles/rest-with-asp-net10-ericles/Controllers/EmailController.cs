@@ -24,7 +24,7 @@ namespace rest_with_asp_net10_ericles.Controllers
         public IActionResult SendEmail([FromBody] EmailRequestDTO emailRequestDTO)
         {
             _logger.LogInformation("Sending email to {to}", emailRequestDTO.To);
-            _emailService.SendSampleEmail(emailRequestDTO.To, emailRequestDTO.Subject, emailRequestDTO.Body);
+            _emailService.SendSampleEmail(emailRequestDTO);
             return Ok("Email sent sucessfully");
         }
     }

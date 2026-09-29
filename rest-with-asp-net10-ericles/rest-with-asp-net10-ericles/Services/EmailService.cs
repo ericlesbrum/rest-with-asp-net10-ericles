@@ -15,17 +15,47 @@ public class EmailService : IEmailService
         _logger = logger;
     }
 
-    public void SendSampleEmail(string to, string subject, string body)
+    public void SendSampleEmail(EmailRequestDTO emailRequestDTO)
     {
         _logger.LogInformation("Service send sample email");
-        _emailSender.To(to)
-            .WithSubject(subject)
-            .WithBody(body)
+        _emailSender.To(emailRequestDTO.To)
+            .WithSubject(emailRequestDTO.Subject)
+            .WithBody(emailRequestDTO.Body)
             .Send();
     }
-    public Task SendEmailWithAttachment(EmailRequestDTO emailRequestDTO, IFormFile attachment)
-    {
-        throw new NotImplementedException();
-    }
 
+    public async Task SendEmailWithAttachment(EmailRequestDTO emailRequestDTO, IFormFile attachment)
+    {
+        if (attachment == null || attachment.Length == 0)
+        {
+            _logger.LogWarning("Attachment is null or empty");
+            throw new ArgumentException("Attachment is null or empty");
+        }
+
+        string tempFilePath = Path.Combine(Path.GetTempPath(), attachment.FileName);
+
+        try
+        {
+            await using (var stream = new FileStream(tempFilePath, FileMode.Create))
+            {
+                await attachment.CopyToAsync(stream);
+            }
+
+            _emailSender.To(emailRequestDTO.To)
+                .WithSubject(emailRequestDTO.Subject)
+                .WithBody(emailRequestDTO.Body)
+                .Attachement(attachment.FileName)
+                .Send();
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Failed to save attachment to temp file");
+            throw;
+        }
+        finally
+        {
+            if (File.Exists(tempFilePath))
+                File.Delete(tempFilePath);
+        }
+    }
 }
