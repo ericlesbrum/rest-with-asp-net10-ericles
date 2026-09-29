@@ -13,7 +13,7 @@ public static class EmailConfig
             throw new ArgumentNullException(nameof(configs), "Email configuration section is missing or invalid");
 
         configs.Username = Environment.GetEnvironmentVariable("EMAIL_USERNAME") ?? configs.Username;
-        configs.Username = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? configs.Password;
+        configs.Password = Environment.GetEnvironmentVariable("EMAIL_PASSWORD") ?? configs.Password;
 
         services.AddSingleton(configs);
 
