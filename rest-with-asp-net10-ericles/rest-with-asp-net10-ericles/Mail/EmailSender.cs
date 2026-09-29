@@ -27,7 +27,7 @@ public class EmailSender
     {
         _to = to;
         _recipients.Clear();
-        _recipients.Add(ParseReciptients(to));
+        _recipients.AddRange(ParseReciptients(to));
         return this;
     }
 
