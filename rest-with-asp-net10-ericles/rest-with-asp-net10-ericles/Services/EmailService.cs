@@ -44,7 +44,7 @@ public class EmailService : IEmailService
             _emailSender.To(emailRequestDTO.To)
                 .WithSubject(emailRequestDTO.Subject)
                 .WithBody(emailRequestDTO.Body)
-                .Attachement(attachment.FileName)
+                .Attachement(tempFilePath)
                 .Send();
         }
         catch (Exception ex)
