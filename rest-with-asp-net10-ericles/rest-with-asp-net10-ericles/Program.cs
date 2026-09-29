@@ -5,6 +5,7 @@ using rest_with_asp_net10_ericles.Files.Exporters.Factory;
 using rest_with_asp_net10_ericles.Files.Importers;
 using rest_with_asp_net10_ericles.Files.Importers.Factory;
 using rest_with_asp_net10_ericles.Hypermedia.Filters;
+using rest_with_asp_net10_ericles.Mail;
 using rest_with_asp_net10_ericles.Repositories;
 using rest_with_asp_net10_ericles.Repositories.Generics;
 using rest_with_asp_net10_ericles.Repositories.Interfaces;
@@ -48,6 +49,8 @@ builder.Services.AddScoped<FileExporterFactory>();
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<EmailSender>();
 
 builder.Services.AddScoped(typeof(IRepository<>),typeof(GenericRepository<>));
 

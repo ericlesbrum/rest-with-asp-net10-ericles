@@ -17,6 +17,7 @@ public class EmailService : IEmailService
 
     public void SendSampleEmail(string to, string subject, string body)
     {
+        _logger.LogInformation("Service send sample email");
         _emailSender.To(to)
             .WithSubject(subject)
             .WithBody(body)
