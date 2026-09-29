@@ -78,9 +78,6 @@ public class EmailSender
             using var client = new SmtpClient();
             client.Connect(_emailSettings.Host, _emailSettings.Port, _emailSettings.Ssl ? SecureSocketOptions.StartTls : SecureSocketOptions.None);
 
-            if (_emailSettings.Properties.SmtpAuth)
-                client.Authenticate(_emailSettings.Username, _emailSettings.Password);
-
             client.Authenticate(_emailSettings.Username, _emailSettings.Password);
             client.Send(message);
             client.Disconnect(true);
